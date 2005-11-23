@@ -1,0 +1,86 @@
+NAME
+    Template::Provider::FromDATA - Load templates from your __DATA__ section
+
+SYNOPSIS
+        use Template;
+        use Template::Provider::FromDATA;
+    
+        # Create the provider
+        my $provider = Template::Provider::FromDATA->new( {
+            CLASSES => __PACKAGE__
+        } );
+    
+        # Add the provider to the config
+        my $template = Template->new( {
+            # ...
+            LOAD_TEMPLATES => [ $provider ]
+        } );
+
+        # ...and now the templates
+    
+        __DATA__
+    
+        __mytemplate__
+        Foo [% bar %]
+    
+        __myothertemplate__
+        Baz, [% qux %]?
+
+DESCRIPTION
+    This module allows you to store your templates inline with your code in
+    the "__DATA__" section. It will search any number of classes specified.
+
+INSTALLATION
+    To install this module via Module::Build:
+
+            perl Build.PL
+            ./Build         # or `perl Build`
+            ./Build test    # or `perl Build test`
+            ./Build install # or `perl Build install`
+
+    To install this module via ExtUtils::MakeMaker:
+
+            perl Makefile.PL
+            make
+            make test
+            make install
+
+METHODS
+  new( \%OPTIONS )
+    Create a new instance of the provider. The only option you can specify
+    is "CLASSES" which will tell the provider what classes to search for
+    templates. By omitting this option it will search "main".
+
+        # defaults to 'main'
+        $provider = Template::Provider::FromDATA->new;
+    
+        # look for templates in 'Foo'
+        $provider = Template::Provider::FromDATA->new;( {
+            CLASSES => 'Foo'
+        } );
+
+        # look for templates in 'Foo::Bar' and 'Foo::Baz'
+        $provider = Template::Provider::FromDATA->new;( {
+            CLASSES => [ 'Foo::Bar', 'Foo::Baz' ]
+        } );
+
+  fetch( $file )
+    This is a sub-classes method that tries to load the template. If $file
+    is a reference, then we assume it holds the content of the template.
+
+  get_file( $class, $file )
+    This method searches through $class for a template named $file. Returns
+    the contents on success, undef on failure.
+
+    This function was mostly borrowed from Catalyst::Helper's "get_file"
+    function.
+
+AUTHOR
+    * Brian Cassidy <bricas@cpan.org>
+
+COPYRIGHT AND LICENSE
+    Copyright 2005 by Brian Cassidy
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

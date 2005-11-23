@@ -1,0 +1,14 @@
+---
+name: Template-Provider-FromDATA
+version: 0.01
+author:
+  - Brian Cassidy <bricas@cpan.org>
+abstract: Load templates from your __DATA__ section
+license: perl
+requires:
+  Template: 0
+provides:
+  Template::Provider::FromDATA:
+    file: lib/Template/Provider/FromDATA.pm
+    version: 0.01
+generated_by: Module::Build version 0.2611
