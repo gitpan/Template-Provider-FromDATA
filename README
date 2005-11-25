@@ -65,8 +65,16 @@ METHODS
         } );
 
   fetch( $file )
-    This is a sub-classes method that tries to load the template. If $file
-    is a reference, then we assume it holds the content of the template.
+    This is a sub-classed method that will forward things to the
+    super-class' "fetch" when it is passed a reference, or to "_fetch" if
+    it's a plain scalar. The scalar should hold the name of the template
+    found in the "__DATA__" section.
+
+  _load( $file, [$alias] )
+    Another sub-classed method. Normally this would try to load the template
+    from a reference or a file on disk. Again, we forward things to the
+    super-class if we see a reference, otherwise we grab the content from
+    the "__DATA__" section.
 
   get_file( $class, $file )
     This method searches through $class for a template named $file. Returns
