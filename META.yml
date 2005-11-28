@@ -1,6 +1,6 @@
 ---
 name: Template-Provider-FromDATA
-version: 0.02
+version: 0.03
 author:
   - Brian Cassidy <bricas@cpan.org>
 abstract: Load templates from your __DATA__ section
@@ -10,5 +10,5 @@ requires:
 provides:
   Template::Provider::FromDATA:
     file: lib/Template/Provider/FromDATA.pm
-    version: 0.02
+    version: 0.03
 generated_by: Module::Build version 0.2611
