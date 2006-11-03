@@ -2,12 +2,13 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
+          'PL_FILES' => {},
+          'INSTALLDIRS' => 'site',
           'NAME' => 'Template::Provider::FromDATA',
+          'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/Template/Provider/FromDATA.pm',
           'PREREQ_PM' => {
-                           'Template' => '0'
-                         },
-          'INSTALLDIRS' => 'site',
-          'PL_FILES' => {}
+                           'Template' => '2.15'
+                         }
         )
 ;

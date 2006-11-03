@@ -1,4 +1,4 @@
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 use strict;
 use warnings;
@@ -6,27 +6,26 @@ use warnings;
 use_ok( 'Template' );
 use_ok( 'Template::Provider::FromDATA' );
 
+use Template::Constants qw( :debug );
+
 my $provider = Template::Provider::FromDATA->new;
 isa_ok( $provider, 'Template::Provider::FromDATA' );
 
 my $template = Template->new( {
     LOAD_TEMPLATES => [ $provider ],
+#    DEBUG          => DEBUG_ALL
 } );
 isa_ok( $template, 'Template' );
 
 {
-    my $output;
-    $template->process( \'ref', {}, \$output );
-    like( $template->error, qr/not found/ );
-}
-
-{
-    my $output;
-    $template->process( 'testDNE', {}, \$output );
-    like( $template->error, qr/not found/ );
+    for( 1..5 ) {
+        my $output;
+        $template->process( 'foo', {}, \$output );
+        is( $output, "bar\n" );
+    }
 }
 
 __DATA__
 
-__test__
-template data
+__foo__
+bar

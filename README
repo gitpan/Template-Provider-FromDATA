@@ -33,17 +33,17 @@ DESCRIPTION
 INSTALLATION
     To install this module via Module::Build:
 
-            perl Build.PL
-            ./Build         # or `perl Build`
-            ./Build test    # or `perl Build test`
-            ./Build install # or `perl Build install`
+        perl Build.PL
+        ./Build         # or `perl Build`
+        ./Build test    # or `perl Build test`
+        ./Build install # or `perl Build install`
 
     To install this module via ExtUtils::MakeMaker:
 
-            perl Makefile.PL
-            make
-            make test
-            make install
+        perl Makefile.PL
+        make
+        make test
+        make install
 
 METHODS
   new( \%OPTIONS )
@@ -64,21 +64,20 @@ METHODS
             CLASSES => [ 'Foo::Bar', 'Foo::Baz' ]
         } );
 
-  fetch( $file )
-    This is a sub-classed method that will forward things to the
-    super-class' "fetch" when it is passed a reference, or to "_fetch" if
-    it's a plain scalar. The scalar should hold the name of the template
-    found in the "__DATA__" section.
+  _init( \%OPTIONS )
+    A subclassed method to handle the options passed to "new()".
 
-  _load( $file, [$alias] )
-    Another sub-classed method. Normally this would try to load the template
-    from a reference or a file on disk. Again, we forward things to the
-    super-class if we see a reference, otherwise we grab the content from
-    the "__DATA__" section.
+  fetch( $name )
+    This is a subclassed method that will load a template via "_fetch()" if
+    a non-reference argument is passed.
 
-  get_file( $class, $file )
-    This method searches through $class for a template named $file. Returns
-    the contents on success, undef on failure.
+  _load( $name )
+    Loads the template via the "get_file()" sub and sets some cache
+    information.
+
+  get_file( $class, $template )
+    This method searches through $class for a template named $template.
+    Returns the contents on success, undef on failure.
 
     This function was mostly borrowed from Catalyst::Helper's "get_file"
     function.
@@ -87,7 +86,7 @@ AUTHOR
     * Brian Cassidy <bricas@cpan.org>
 
 COPYRIGHT AND LICENSE
-    Copyright 2005 by Brian Cassidy
+    Copyright 2006 by Brian Cassidy
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
