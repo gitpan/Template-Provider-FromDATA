@@ -8,6 +8,7 @@ WriteMakefile
           'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/Template/Provider/FromDATA.pm',
           'PREREQ_PM' => {
+                           'Class::Accessor' => 0,
                            'Template' => '2.15'
                          }
         )
