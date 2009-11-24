@@ -17,7 +17,10 @@ t/10-basic.t
 t/11-classes.t
 t/12-external_classes.t
 t/13-cache.t
+t/14-qualified.t
+t/15-same_name.t
 t/20-error.t
 t/98-pod_coverage.t
 t/99-pod.t
+t/lib/My/Other/Templates.pm
 t/lib/My/Templates.pm

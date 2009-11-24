@@ -27,6 +27,9 @@ Template::Provider::FromDATA - Load templates from your __DATA__ section
         LOAD_TEMPLATES => [ $provider ]
     } );
 
+    # Render a template
+    $template->process( 'mytemplate', { bar => 'Bar' } );
+
     # ...and now the templates
     
     __DATA__
@@ -46,7 +49,12 @@ specified.
 =head1 CAVEAT
 
 If you have two templates with the same name, this module will not understand
-the difference, it will simply return the first one found.
+the difference, it will simply return the first one found. If you wish, you
+can specify a fully qualified template name by prefixing the template with the
+module name (using C<-> instead of C<::> as a namespace separator), adding
+a C</> to separate the module name from the template name.
+
+    $template->process( 'My-Templates/mytemplate', { bar => 'Bar' } );
 
 =head1 INSTALLATION
 
@@ -59,7 +67,7 @@ the difference, it will simply return the first one found.
 
 __PACKAGE__->mk_accessors( qw( cache classes ) );
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 =head1 METHODS
 
@@ -134,6 +142,14 @@ sub _load {
     my $classes = $self->classes;
     my( $content, $error );
 
+    # handle fully qualified names
+    if( $name =~ m{/} ) {
+        my( $class, $template ) = split( m{/}, $name, 2 );
+        $class   =~ s{-}{::}g;
+        $classes = [ $class ];
+        $name    = $template;
+    }
+
     for my $class ( @$classes ) {
         $content = $self->get_file( $class, $name );
         last if $content;
@@ -165,32 +181,32 @@ sub get_file {
     my( $self, $class, $template ) = @_;
 
     my $cache = $self->cache;
+    my $key   = "${class}/${template}";
 
-    if( !exists $cache->{ templates }->{ $template } ) {
-        unless ( $cache->{ classes }->{ $class } ) {
-            local $/;
-            no strict 'refs';
-            my $fh = \*{"${class}\::DATA"};
-            my $filecache = <$fh>;
-            $cache->{ classes }->{ $class }++;
-
-            my $result;
-            my @files = split /^__(.+)__\r?\n/m, $filecache;
-            shift @files;
-            while (@files) {
-                my( $name, $content ) = splice @files, 0, 2;
-                $cache->{ templates }->{ $name } = $content;
-                $result = $content if $name eq $template;
-            }
-
-            return $result;
-        }
-
-        return undef;
+    if( exists $cache->{ templates }->{ $key } ) {
+        return $cache->{ templates }->{ $key };
     }
-    else {
-        return $cache->{ templates }->{ $template };
+
+    return undef if $cache->{ classes }->{ $class };
+    
+    no strict 'refs';
+    my $fh  = \*{"${class}\::DATA"};
+    my $pos = tell( $fh );
+    my $filecache = do { local $/; <$fh>; };
+    seek( $fh, $pos, 0 );
+    $cache->{ classes }->{ $class }++;
+
+    my $result;
+    my @files = split /^__(.+)__\r?\n/m, $filecache;
+    shift @files;
+    while (@files) {
+        my( $name, $content ) = splice @files, 0, 2;
+        my $key = "${class}/${name}";
+        $cache->{ templates }->{ $key } = $content;
+        $result = $content if $name eq $template;
     }
+
+    return $result;
 }
 
 =head1 AUTHOR

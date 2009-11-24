@@ -1,12 +1,16 @@
-use Test::More tests => 9;
+use Test::More tests => 5;
 
 use strict;
 use warnings;
 
+use lib qw( t/lib );
+
 use_ok( 'Template' );
 use_ok( 'Template::Provider::FromDATA' );
 
-my $provider = Template::Provider::FromDATA->new;
+my $provider = Template::Provider::FromDATA->new( {
+    CLASSES => 'My::Templates'
+} );
 isa_ok( $provider, 'Template::Provider::FromDATA' );
 
 my $template = Template->new( {
@@ -15,14 +19,7 @@ my $template = Template->new( {
 isa_ok( $template, 'Template' );
 
 {
-    for( 1..5 ) {
-        my $output;
-        $template->process( 'foo', {}, \$output );
-        is( $output, "bar\n" );
-    }
+    my $output;
+    $template->process( 'My-Templates/test', {}, \$output );
+    is( $output, "template data\n" );
 }
-
-__DATA__
-
-__foo__
-bar

@@ -16,6 +16,9 @@ SYNOPSIS
             LOAD_TEMPLATES => [ $provider ]
         } );
 
+        # Render a template
+        $template->process( 'mytemplate', { bar => 'Bar' } );
+
         # ...and now the templates
     
         __DATA__
@@ -32,7 +35,13 @@ DESCRIPTION
 
 CAVEAT
     If you have two templates with the same name, this module will not
-    understand the difference, it will simply return the first one found.
+    understand the difference, it will simply return the first one found. If
+    you wish, you can specify a fully qualified template name by prefixing
+    the template with the module name (using "-" instead of "::" as a
+    namespace separator), adding a "/" to separate the module name from the
+    template name.
+
+        $template->process( 'My-Templates/mytemplate', { bar => 'Bar' } );
 
 INSTALLATION
         perl Makefile.PL
