@@ -86,6 +86,13 @@ METHODS
     This function was mostly borrowed from Catalyst::Helper's "get_file"
     function.
 
+ACCESSORS
+  classes
+    An arrayref of the class names containing our templates.
+
+  cache
+    A hashref of file and template data.
+
 AUTHOR
     Brian Cassidy <bricas@cpan.org>
 
