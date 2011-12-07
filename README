@@ -51,21 +51,29 @@ INSTALLATION
 
 METHODS
   new( \%OPTIONS )
-    Create a new instance of the provider. The only option you can specify
-    is "CLASSES" which will tell the provider what classes to search for
-    templates. By omitting this option it will search "main".
+    Create a new instance of the provider. You can specify a list of classes
+    to be searched for templates via the "CLASSES" option. By omitting this
+    option it will search "main".
 
         # defaults to 'main'
         $provider = Template::Provider::FromDATA->new;
     
         # look for templates in 'Foo'
-        $provider = Template::Provider::FromDATA->new;( {
+        $provider = Template::Provider::FromDATA->new( {
             CLASSES => 'Foo'
         } );
 
         # look for templates in 'Foo::Bar' and 'Foo::Baz'
-        $provider = Template::Provider::FromDATA->new;( {
+        $provider = Template::Provider::FromDATA->new( {
             CLASSES => [ 'Foo::Bar', 'Foo::Baz' ]
+        } );
+
+    By default, template data is lazy-loaded as they it is requested. If you
+    wish to load up all template data upon initializtion, you can use the
+    "PRELOAD" option.
+
+        $provider = Template::Provider::FromDATA->new( {
+            PRELOAD => 1
         } );
 
   _init( \%OPTIONS )
@@ -97,7 +105,7 @@ AUTHOR
     Brian Cassidy <bricas@cpan.org>
 
 COPYRIGHT AND LICENSE
-    Copyright 2005-2009 by Brian Cassidy
+    Copyright 2005-2011 by Brian Cassidy
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
